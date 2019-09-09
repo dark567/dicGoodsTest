@@ -531,30 +531,30 @@ namespace WindowsFormsApp1
 
             foreach (DicGoodsModel s in DicGoodsModel.GetDicGoodsModel)
             {
-                data.Add(new SampleRow(s.ID, s.Name, s.Price.ToString("F2"), false, 4));
+                data.Add(new SampleRow(code: s.ID, name: s.Name, _isService: s.IsService, price: s.Price.ToString("F2"), _isSale: s.IsSale));
             }
 
             dataGridView1.DataSource = data;
 
-           //// set autosize mode
-           // dataGridView1.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-           // dataGridView1.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-           // dataGridView1.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            //// set autosize mode
+            // dataGridView1.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            // dataGridView1.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            // dataGridView1.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
 
-           // //dataGridView1.Columns[0].Width = 250;
-           // //dataGridView1.Columns[1].Width = 250;
-           // //dataGridView1.Columns[2].Width = 250;
+            // //dataGridView1.Columns[0].Width = 250;
+            // //dataGridView1.Columns[1].Width = 250;
+            // //dataGridView1.Columns[2].Width = 250;
 
-           // //datagrid has calculated it widths so we can store them
-           // for (int i = 0; i <= dataGridView1.Columns.Count - 1; i++)
-           // {
-           //     //store autosized widths
-           //     int colw = dataGridView1.Columns[i].Width;
-           //     //remove autosizing
-           //     dataGridView1.Columns[i].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-           //     //set width to calculated by autosize
-           //     dataGridView1.Columns[i].Width = colw;
-           // }
+            // //datagrid has calculated it widths so we can store them
+            // for (int i = 0; i <= dataGridView1.Columns.Count - 1; i++)
+            // {
+            //     //store autosized widths
+            //     int colw = dataGridView1.Columns[i].Width;
+            //     //remove autosizing
+            //     dataGridView1.Columns[i].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            //     //set width to calculated by autosize
+            //     dataGridView1.Columns[i].Width = colw;
+            // }
 
             //dataGridView1.AutoGenerateColumns = false;
 
@@ -611,6 +611,7 @@ namespace WindowsFormsApp1
             //    }
             //}
 
+            //нумерация
             int index = 0;
             object header;
             string indexStr = (index + 1).ToString();
@@ -619,7 +620,6 @@ namespace WindowsFormsApp1
                 header = this.dataGridView1.Rows[index].HeaderCell.Value;
                 if (header == null || !header.Equals(indexStr))
                     this.dataGridView1.Rows[index].HeaderCell.Value = indexStr;
-                // index++;
                 indexStr = (index++).ToString();
             }
 
@@ -641,7 +641,7 @@ namespace WindowsFormsApp1
             FbConnection fb = new FbConnection(connString);
 
             fb.Open();
-            FbCommand SelectSQL = new FbCommand("SELECT id, name, price_out FROM dic_goods where GRP_ID = @cust_no ORDER BY name", fb);
+            FbCommand SelectSQL = new FbCommand("SELECT code, name, IS_SERVICE, PRICE_OUT, IS_ACTIVE FROM dic_goods where GRP_ID = @cust_no ORDER BY name", fb);
             //add one IN parameter                     
             FbParameter nameParam = new FbParameter("@cust_no", ID);
             // добавляем параметр к команде
@@ -655,10 +655,10 @@ namespace WindowsFormsApp1
             {
                 while (reader.Read())
                 {
-                    DicGoodsModel.AddDicGoodsModel(new DicGoodsModel(id: reader?.GetString(0), name: reader?.GetString(1), price: reader.GetDouble(2)));
+                    DicGoodsModel.AddDicGoodsModel(new DicGoodsModel(id: reader?.GetString(0), name: reader?.GetString(1), isService: reader?.GetString(2) == "1" ? true : false, price: reader.GetDouble(3),isSale: reader?.GetString(4) == "1" ? true : false));
                 }
             }
-            catch (Exception)
+            catch (Exception) //selection=="+"? (x+y) : (x-y);
             {
                 //dataGridView1.Rows.Clear();
             }
@@ -727,6 +727,11 @@ namespace WindowsFormsApp1
             //this.listView1.Items[0].Selected = true;
         }
 
+        /// <summary>
+        /// нумерация строк
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void DataGridView1_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
         {
             int index = e.RowIndex;
@@ -736,6 +741,11 @@ namespace WindowsFormsApp1
                 this.dataGridView1.Rows[index].HeaderCell.Value = indexStr;
         }
 
+        /// <summary>
+        /// обработка аттрибутов
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void DataGridView1_ColumnAdded(object sender, DataGridViewColumnEventArgs e)
         {
             // Get the property object based on the DataPropertyName of the column

@@ -13,48 +13,49 @@ namespace WindowsFormsApp1
         [DisplayName("Код")]
         [ColumnWeight(10)] //todo
         [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
-        [TypesIService(false)]
+        //[TypesIService(false)]
         public string code { get; set; }
 
         [DisplayName("Наименование")]
         [ColumnWeight(10)] //todo
         [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
-        [TypesIService(false)]
+       // [TypesIService(false)]
         public string name { get; set; } //обязательно нужно использовать get конструкцию
 
         [DisplayName("Единица измерения")]
         [ColumnWeight(10)] //todo
         [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
-        [TypesIService(false)]
+        //[TypesIService(false)]
         public string edIzm { get; set; }
 
         [DisplayName("Услуга")]
         [ColumnWeight(10)] //todo
         [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
-        [TypesIService(true)] 
+        //[TypesIService(true)] //todo
         public bool isService { get; set; }
 
-        [DisplayName("Цена")]
+        [DisplayName("Цена реализации")]
         [ColumnWeight(10)] //todo
         [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
-        [TypesIService(false)]
+        //[TypesIService(false)] //todo
         public string price { get; set; }
 
-        [DisplayName("Код")]
+        [DisplayName("В продаже")]
         [ColumnWeight(10)] //todo
         [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
-        [TypesIService(false)]
-        public int count { get; set; }
+        //[TypesIService(false)] //todo
+        public bool isSale { get; set; }
 
         public string Hidden = ""; //Данное свойство не будет отображаться как колонка
 
-        public SampleRow(string code, string name, string price, bool _isService, int count)
+        public SampleRow(string code, string name, bool _isService, string price, bool _isSale)
         {
             this.code = code;
             this.name = name;
-            this.price = price;
             this.isService = _isService;
-            this.count = count;
+            this.price = price;
+            this.isSale = _isSale;
+            
         }
     }
 }

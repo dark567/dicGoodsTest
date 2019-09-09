@@ -10,7 +10,10 @@ namespace WindowsFormsApp1
     {
         public string ID { get; set; }
         public string Name { get; set; }
+        public bool IsService { get; set; }
         public double Price { get; set; }
+
+        public bool IsSale { get; set; }
 
         public static List<DicGoodsModel> _dicGoodsModel;
         static DicGoodsModel()
@@ -18,11 +21,13 @@ namespace WindowsFormsApp1
             _dicGoodsModel = new List<DicGoodsModel>();
         }
 
-        public DicGoodsModel(string id, string name, double price = 0.00)
+        public DicGoodsModel(string id, string name, bool isService, bool isSale, double price = 0.00)
         {
             this.ID = id;
             this.Name = name;
+            this.IsService = isService;
             this.Price = price;
+            this.IsSale = isSale;
         }
 
         public static DicGoodsModel[] GetDicGoodsModel
