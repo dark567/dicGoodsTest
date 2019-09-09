@@ -531,7 +531,7 @@ namespace WindowsFormsApp1
 
             foreach (DicGoodsModel s in DicGoodsModel.GetDicGoodsModel)
             {
-                data.Add(new SampleRow(code: s.ID, name: s.Name, _isService: s.IsService, price: s.Price.ToString("F2"), _isSale: s.IsSale));
+                data.Add(new SampleRow(id: s.ID, code: s.Code, name: s.Name, _isService: s.IsService, price: s.Price.ToString("F2"), _isSale: s.IsSale));
             }
 
             dataGridView1.DataSource = data;
@@ -641,7 +641,7 @@ namespace WindowsFormsApp1
             FbConnection fb = new FbConnection(connString);
 
             fb.Open();
-            FbCommand SelectSQL = new FbCommand("SELECT code, name, IS_SERVICE, PRICE_OUT, IS_ACTIVE FROM dic_goods where GRP_ID = @cust_no ORDER BY name", fb);
+            FbCommand SelectSQL = new FbCommand("SELECT id, code, name, IS_SERVICE, PRICE_OUT, IS_ACTIVE FROM dic_goods where GRP_ID = @cust_no ORDER BY name", fb);
             //add one IN parameter                     
             FbParameter nameParam = new FbParameter("@cust_no", ID);
             // добавляем параметр к команде
@@ -655,7 +655,7 @@ namespace WindowsFormsApp1
             {
                 while (reader.Read())
                 {
-                    DicGoodsModel.AddDicGoodsModel(new DicGoodsModel(id: reader?.GetString(0), name: reader?.GetString(1), isService: reader?.GetString(2) == "1" ? true : false, price: reader.GetDouble(3),isSale: reader?.GetString(4) == "1" ? true : false));
+                    DicGoodsModel.AddDicGoodsModel(new DicGoodsModel(id: reader?.GetString(0), code: reader?.GetString(1), name: reader?.GetString(2), isService: reader?.GetString(3) == "1" ? true : false, price: reader.GetDouble(4),isSale: reader?.GetString(5) == "1" ? true : false));
                 }
             }
             catch (Exception) //selection=="+"? (x+y) : (x-y);
@@ -772,6 +772,13 @@ namespace WindowsFormsApp1
                 e.Column.AutoSizeMode = (DataGridViewAutoSizeColumnMode)autoSize.SizeMode;
             }
 
+            var visibleTypes = (VisibleTypes)property?.GetCustomAttribute(typeof(VisibleTypes));
+            if (visibleTypes != null)
+            {
+                // Finally, set the FillWeight of the column to our defined weight in the attribute
+                e.Column.Visible = visibleTypes.typesVisible;
+            }
+
             //var TypeIsService = (TypesIServiceAttribute)property?.GetCustomAttribute(typeof(TypesIServiceAttribute));
             //if (TypeIsService != null)
             //{
@@ -807,6 +814,38 @@ namespace WindowsFormsApp1
         private void DataGridView1_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
 
+        }
+
+        private void DataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            var senderGrid = (DataGridView)sender;
+
+            string x = dataGridView1.Rows[e.RowIndex].Cells[1].Value.ToString();
+            //MessageBox.Show($"{x}");
+
+            //if (senderGrid.Columns[e.ColumnIndex] is DataGridViewButtonColumn &&
+            //    e.RowIndex >= 0)
+            //{
+            //    MessageBox.Show($"");
+            //}
+
+            if (senderGrid.Columns[e.ColumnIndex] is DataGridViewButtonColumn &&
+            e.RowIndex >= 0)
+            {
+
+                //TODO - Button Clicked - Execute Code Here
+                string y = dataGridView1.Rows[e.RowIndex].Cells[3].Value.ToString();
+                MessageBox.Show($"{y}");
+                //Form1 myform = new Form1();
+                //myform.rowid = (int)x;
+                //myform.Show();
+            }
+        }
+
+        private void DataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            string x = dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString();
+            MessageBox.Show($"{x}");
         }
     }
 }

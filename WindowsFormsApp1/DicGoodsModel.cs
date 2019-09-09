@@ -9,6 +9,7 @@ namespace WindowsFormsApp1
     public class DicGoodsModel
     {
         public string ID { get; set; }
+        public string Code { get; set; }
         public string Name { get; set; }
         public bool IsService { get; set; }
         public double Price { get; set; }
@@ -21,9 +22,10 @@ namespace WindowsFormsApp1
             _dicGoodsModel = new List<DicGoodsModel>();
         }
 
-        public DicGoodsModel(string id, string name, bool isService, bool isSale, double price = 0.00)
+        public DicGoodsModel(string id, string code, string name, bool isService, bool isSale, double price = 0.00)
         {
             this.ID = id;
+            this.Code = code;
             this.Name = name;
             this.IsService = isService;
             this.Price = price;

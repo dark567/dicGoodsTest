@@ -10,6 +10,13 @@ namespace WindowsFormsApp1
 {
     public class SampleRow
     {
+        [VisibleTypes(true)]
+        [DisplayName("ID")]
+        [ColumnWeight(10)] //todo
+        [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
+        //[TypesIService(false)]
+        public string id { get; set; }
+
         [DisplayName("Код")]
         [ColumnWeight(10)] //todo
         [AutoSizeMode(DataGridViewAutoSizeColumnMode.AllCells)]
@@ -48,8 +55,9 @@ namespace WindowsFormsApp1
 
         public string Hidden = ""; //Данное свойство не будет отображаться как колонка
 
-        public SampleRow(string code, string name, bool _isService, string price, bool _isSale)
+        public SampleRow(string id, string code, string name, bool _isService, string price, bool _isSale)
         {
+            this.id = id;
             this.code = code;
             this.name = name;
             this.isService = _isService;
